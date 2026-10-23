@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RailEdge AI – We don’t predict delays. We predict future.</title>
+<meta name="description" content="Search any train and see where it is, how fast it is moving, how late it may run and whether the weather will affect it.">
+<style>
+:root{--pg:#eceae3;--tx:#111214;--mu:#5d6064;--gn:#22c55e;--rd:#ef4444;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pg:#08090a;--tx:#f0efe9;--mu:#8d9095}}
+:root[data-theme="dark"]{--pg:#08090a;--tx:#f0efe9;--mu:#8d9095}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--pg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1120px;margin:0 auto;padding:0 20px}
+.hero{min-height:min(92vh,860px);display:flex;flex-direction:column;justify-content:center;padding-top:40px;padding-bottom:32px}
+h1{font-weight:800;font-size:clamp(58px,14vw,176px);line-height:.92;letter-spacing:-.045em;margin:0}h1 span{color:var(--gn)}
+.tg{font-size:clamp(24px,4.6vw,46px);line-height:1.15;letter-spacing:-.02em;font-weight:600;margin:28px 0 0}.tg span{color:var(--mu)}
+.ht{--g:clamp(26px,8vw,92px);display:flex;align-items:center;margin-top:auto;padding-top:56px;overflow:hidden}
+.ht i{flex:none;width:14px;height:14px;border-radius:50%;background:var(--tx);position:relative}
+.ht i:not(:last-child){margin-right:var(--g)}.ht i:not(:last-child):after{content:"";position:absolute;left:14px;top:5.5px;width:var(--g);height:3px;background:var(--mu);opacity:.5}
+.ht i.r{background:var(--rd)}.ht i.r:after{background:var(--rd)!important;opacity:1!important}.ht i.g{background:var(--gn);animation:pu 1.8s infinite}
+@keyframes pu{0%{box-shadow:0 0 0 0 rgba(34,197,94,.7)}100%{box-shadow:0 0 0 16px rgba(34,197,94,0)}}
+.cue{font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mu);margin-top:22px}
+.pnl{--tx:#f1f0ea;--mu:#9a9da2;--ln:#2a2d32;background:#101215;color:var(--tx);border:1px solid #24272b;border-radius:22px;padding:clamp(18px,4vw,44px);margin-bottom:64px}
+.lb{font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+.pnl h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.025em;line-height:1.1;margin:8px 0 22px}
+.sb{display:flex;align-items:center;background:#1a1d21;border:1px solid #31353b;border-radius:999px;padding:6px 6px 6px 28px}
+.sb:focus-within{border-color:var(--gn);box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+.sb input{flex:1;min-width:0;background:none;border:0;outline:0;color:inherit;font:inherit;font-size:clamp(16px,2.4vw,20px);padding:14px 0}
+.sb input::placeholder{color:#7d8187}
+.sb button{flex:none;width:52px;height:52px;border-radius:50%;border:0;background:var(--gn);color:#06110a;display:grid;place-items:center;cursor:pointer}
+.sb button:hover{filter:brightness(1.1)}
+.msg{min-height:20px;margin:10px 0 0 24px;font-size:14px;color:#ff8a80}
+.lst{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+button.it{text-align:left;background:#15181c;border:1px solid var(--ln);border-radius:16px;padding:16px 18px;color:inherit;font:inherit;cursor:pointer}
+button.it:hover,button.it:focus-visible{border-color:var(--gn);outline:0}
+.it b{display:block;font-size:17px;letter-spacing:-.01em}.it b span{font-weight:500;color:#c9cbcf}
+.sub{margin-top:8px;font-size:13px;color:var(--mu);display:flex;flex-wrap:wrap;gap:4px 14px}
+.sub em{font-style:normal}.d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}.d.r{background:var(--rd)}.d.g{background:var(--gn)}
+.back{background:none;border:0;color:var(--mu);font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:0;margin-bottom:18px}.back:hover{color:var(--tx)}
+.main{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:center}
+.tn{font-weight:800;font-size:clamp(48px,8vw,84px);line-height:1;letter-spacing:-.04em}.tm{font-size:24px;font-weight:600;margin-top:6px;letter-spacing:-.01em}.rt{color:var(--mu);font-size:14px;margin-top:10px}
+.trk{display:flex;overflow-x:auto;padding:6px 0 10px;scrollbar-width:thin}
+.s{flex:0 0 116px;position:relative;padding-top:56px;text-align:center}
+.nm{position:absolute;top:0;left:4px;right:4px;height:46px;display:flex;align-items:flex-end;justify-content:center;font-size:12.5px;line-height:1.2;font-weight:600}
+.s.g .nm{color:#4ade80}
+.s i{display:block;width:16px;height:16px;margin:0 auto;border-radius:50%;background:#f5f5f2;position:relative;z-index:1}
+.s.r i{background:var(--rd)}.s.g i{background:var(--gn);animation:pu 1.8s infinite}
+.s:not(:last-child):after{content:"";position:absolute;left:50%;width:100%;top:62px;height:3px;background:#3b3e44}
+.s.r:not(.c):after{background:var(--rd)}.s.c:after{background:linear-gradient(90deg,var(--rd) calc(var(--f)*100%),#3b3e44 0)}
+.s em{display:block;margin-top:10px;font:11px var(--mono);color:#4ade80;font-style:normal}
+.mt{display:grid;grid-template-columns:1fr 1.3fr 1.5fr;gap:12px;margin-top:26px}
+.m{background:#15181c;border:1px solid var(--ln);border-radius:16px;padding:18px 20px}
+.v{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin:8px 0 2px}.v small{font-size:16px;font-weight:600;color:var(--mu);letter-spacing:0}
+.vd{font-size:14px;color:#d6d8dc}
+.sc{height:10px;border-radius:99px;background:linear-gradient(90deg,#22c55e,#facc15 50%,#ef4444);position:relative;margin:22px 0 8px}
+.sc u{position:absolute;top:-6px;width:5px;height:22px;border-radius:3px;background:#fff;transform:translateX(-50%);box-shadow:0 0 0 3px #15181c}
+.sl{display:flex;justify-content:space-between;font:10px var(--mono);color:var(--mu);text-transform:uppercase;letter-spacing:.06em}
+.wr{display:flex;gap:14px;align-items:flex-start;margin-top:10px}.wr svg{flex:none;width:34px;height:34px;color:#cfd2d6}
+.wc{font-weight:600;font-size:16px;line-height:1.3}.wt{font-size:13px;color:var(--mu);margin-top:6px}
+.chp{display:inline-block;margin-top:8px;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:700}
+.c0{background:rgba(34,197,94,.16);color:#4ade80}.c1{background:rgba(250,204,21,.16);color:#facc15}.c2{background:rgba(239,68,68,.18);color:#ff8a80}
+.ft{margin-top:22px;font:11px var(--mono);color:var(--mu)}
+@media(max-width:860px){.main{grid-template-columns:1fr}.mt{grid-template-columns:1fr}.lst{grid-template-columns:1fr}}
+footer{border-top:1px solid color-mix(in srgb,var(--mu) 30%,transparent);padding:26px 0 44px;color:var(--mu);font-size:13px}
+.nv{display:flex;justify-content:space-between;align-items:center;height:64px}.nv b{font-weight:800;letter-spacing:-.02em}.nv b span{color:var(--gn)}
+.nv a{color:var(--mu);text-decoration:none;font:12px var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-left:22px}.nv a:hover{color:var(--tx)}
+.al{display:inline-block;margin-top:14px;color:#4ade80;font-size:14px;font-weight:600;text-decoration:none}.al:hover{text-decoration:underline}
+.pnl+.pnl{margin-top:-24px}
+.in{width:100%;background:#1a1d21;border:1px solid #31353b;border-radius:12px;color:inherit;font:inherit;padding:13px 14px}.in:focus{outline:2px solid var(--gn);outline-offset:1px}
+.row2{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}.row2 .lb{display:block;margin-bottom:6px}
+.br{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:14px 4px;border-top:1px solid var(--ln)}
+.br b{display:block}.br span:not(.chp){font-size:13px;color:var(--mu)}.bt{font:700 22px var(--mono)}
+.cr{margin-top:18px;background:#15181c;border:1px solid var(--ln);border-radius:16px;padding:20px}
+.pc{font-size:56px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-top:8px}
+.sc.rv{background:linear-gradient(90deg,#ef4444,#facc15 50%,#22c55e)}
+.fb{padding:13px 22px;border-radius:999px;border:0;background:var(--gn);color:#06110a;font:700 14px system-ui,sans-serif;cursor:pointer}.fb:hover{filter:brightness(1.1)}
+.stp{margin-top:20px;border-top:1px solid var(--ln);padding-top:18px}.cx{font-size:13px;color:#c9cbcf;margin:12px 0}.cx a{color:#4ade80}
+details{border-top:1px solid var(--ln);padding:14px 0}summary{cursor:pointer;font-weight:600}details p{color:var(--mu);margin:8px 0 0}
+.tb button{background:none;border:1px solid var(--ln);color:var(--mu);border-radius:999px;padding:8px 14px;cursor:pointer;font:inherit;font-size:14px;margin:0 6px 8px 0}.tb button.on{background:#f1f0ea;color:#111;border-color:#f1f0ea}
+.ib{margin-top:10px;color:#cfd2d6}.ib ul{padding-left:20px}.ib li{margin:8px 0}.ib a{color:#4ade80}.ib small{color:var(--mu)}
+footer a{color:var(--mu);margin-right:18px;text-decoration:none}footer a:hover{color:var(--tx)}
+@media(max-width:860px){.row2{grid-template-columns:1fr}.br{grid-template-columns:1fr auto}.nv a:not(.k){display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<nav class="w nv"><b>RailEdge <span>AI</span></b><div><a href="#find">Track</a><a href="#board">Station board</a><a href="#connect">Connections</a><a href="#alerts" class="k">SMS alerts</a><a href="#info">Help</a></div></nav>
+<header class="w hero">
+<h1>RailEdge <span>AI</span></h1>
+<p class="tg"><span>We don’t predict delays.</span><br>We predict future.</p>
+<div class="ht" aria-hidden="true"><i class="r"></i><i class="r"></i><i class="r"></i><i class="r"></i><i class="g"></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="cue">Scroll to find your train</div>
+</header>
+
+<main class="w">
+<section class="pnl" id="find" aria-label="Train finder">
+<div class="lb">Train finder</div>
+<h2>Where is your train, and will it be late?</h2>
+<form class="sb" id="f" role="search"><input id="q" type="search" placeholder="Enter your train number" aria-label="Train number or name" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="Find train"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button></form>
+<div class="msg" id="msg" role="status"></div>
+<div id="tp"><div class="lb" style="margin-top:14px">Top searched trains</div><div class="lst" id="lst"></div></div>
+<div id="res" hidden></div>
+<div class="ft">Train positions, delays and weather shown here are demonstration values until your live RailEdge feed is connected.</div>
+</section>
+<section class="pnl" id="board"><div class="lb">Station board</div><h2>Who’s arriving at your station?</h2>
+<select class="in" id="bs" aria-label="Station"></select><div id="bl" style="margin-top:14px"></div></section>
+
+<section class="pnl" id="connect"><div class="lb">Connection check</div><h2>Will you make your change?</h2>
+<div class="row2"><div><label class="lb" for="ca">Arriving train</label><select class="in" id="ca"></select></div><div><label class="lb" for="cs">Change at</label><select class="in" id="cs"></select></div><div><label class="lb" for="cb">Onward train</label><select class="in" id="cb"></select></div></div>
+<div class="cr" id="co"></div></section>
+
+<section class="pnl" id="alerts"><div class="lb">Optional · SMS journey alerts</div><h2>Get a text when your train’s timing changes</h2>
+<p style="color:var(--mu);margin:0 0 16px;max-width:640px">Upload a screenshot or photo of your ticket. We read the PNR, check it, then ask for your mobile number. Alerts start when your journey begins.</p>
+<div class="row2" style="grid-template-columns:2fr auto;align-items:center"><input class="in" type="file" id="fi" accept="image/*" aria-label="Ticket image"><button class="fb" id="fs">Scan ticket</button></div>
+<div class="msg" id="sm2" style="margin:10px 0 0"></div>
+<details id="mn"><summary>Enter ticket details manually</summary><div class="row2"><input class="in" id="mp" inputmode="numeric" maxlength="10" placeholder="10-digit PNR" aria-label="PNR"><input class="in" id="mt" inputmode="numeric" maxlength="5" placeholder="Train number" aria-label="Train number"><input class="in" id="md" type="date" aria-label="Journey date"></div><button class="fb" id="mb" style="margin-top:12px">Check ticket</button></details>
+<div class="cr" id="ck" hidden></div>
+<div class="stp" id="nm" hidden><label class="lb" for="ap">Mobile number</label><input class="in" id="ap" type="tel" inputmode="tel" placeholder="+91 98765 43210" autocomplete="tel" style="margin-top:6px">
+<div class="cx"><label><input type="checkbox" id="ac"> I agree to receive SMS alerts for this journey. <a href="#info" data-t="privacy">Privacy</a></label></div><button class="fb" id="ab">Turn on alerts</button><div class="stt" id="as" style="margin-top:12px;font-size:14px"></div></div>
+</section>
+
+<section class="pnl" id="info"><div class="lb">Help and legal</div>
+<div class="tb" id="tb" style="margin-top:14px"><button data-t="faq" class="on">FAQ</button><button data-t="contact">Contact</button><button data-t="privacy">Privacy</button><button data-t="terms">Terms</button></div>
+<div class="ib" id="i-faq"><details open><summary>How does RailEdge predict arrival times?</summary><p>Receivers beside the track detect each train as it passes. Our model combines those timestamps with past delays, speed and congestion, and updates the arrival time every time the train crosses a new point.</p></details>
+<details><summary>How accurate are the predictions?</summary><p>Estimates sharpen as a train passes more trackside points. They are forecasts, not guarantees, so keep a safety margin for connections.</p></details>
+<details><summary>What does the delay scale mean?</summary><p>Green means little delay is likely, yellow means the train may or may not run late, and red means a large delay is possible.</p></details>
+<details><summary>Do I need an account?</summary><p>No. Searching trains needs no sign-up. SMS alerts need only your ticket and a mobile number.</p></details>
+<details><summary>When do SMS alerts start?</summary><p>At the time of your journey, not before. You can stop them at any time by replying STOP.</p></details>
+<details><summary>Can weather really change my train’s timing?</summary><p>The weather panel flags conditions on the route ahead, such as fog, heavy rain or storms, that usually lead to speed limits.</p></details></div>
+<div class="ib" id="i-contact" hidden><p>Questions, feedback or partnership requests: <a href="mailto:contact@railedge.ai">contact@railedge.ai</a></p><p><small>We aim to reply within two working days.</small></p></div>
+<div class="ib" id="i-privacy" hidden><p><small>Last updated 23 October 2026</small></p><ul><li><b>What we collect:</b> only what you give us for alerts: PNR, train number, journey date, route and your mobile number.</li><li><b>Your ticket image:</b> used only to read those details. We do not collect passenger names.</li><li><b>Why:</b> to send SMS alerts for your journey, and for nothing else.</li><li><b>Keeping it:</b> alert details are deleted after your journey ends.</li><li><b>Sharing:</b> we never sell your data. Your number goes to our SMS provider only to deliver messages.</li><li><b>Your choices:</b> reply STOP to end alerts, or email us to delete your data.</li></ul></div>
+<div class="ib" id="i-terms" hidden><p><small>Last updated 23 October 2026</small></p><ul><li>RailEdge AI gives predictions based on sensor data and models. They are estimates, not guarantees.</li><li>We are not Indian Railways or IRCTC and are not affiliated with them. Always confirm with official sources before relying on a time.</li><li>SMS alerts are sent on a best-effort basis and may be delayed or missed.</li><li>Please use the service lawfully and do not misuse the ticket upload or alerts.</li><li>We may update these terms and will change the date above when we do.</li></ul></div>
+</section></main>
+<footer><div class="w"><div style="margin-bottom:12px"><a href="#info" data-t="faq">FAQ</a><a href="#info" data-t="contact">Contact</a><a href="#info" data-t="privacy">Privacy</a><a href="#info" data-t="terms">Terms</a></div>RailEdge AI · Trackside intelligence for Indian Railways. Not affiliated with Indian Railways or IRCTC.</div></footer>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var T=[
+{n:"12951",m:"Mumbai Rajdhani",st:["Mumbai Central","Borivali","Surat","Vadodara Jn","Ratlam Jn","Kota Jn","Hazrat Nizamuddin","New Delhi"],p:3,f:.45,sp:96,d:6,e:71,w:{k:"sun",c:"Clear skies on the Vadodara–Ratlam stretch",i:0,t:"No weather-related slowdown expected for the next few hours."}},
+{n:"12953",m:"August Kranti Rajdhani",st:["Hazrat Nizamuddin","Kota Jn","Ratlam Jn","Vadodara Jn","Surat","Borivali","Mumbai Central"],p:1,f:.6,sp:88,d:14,e:54,w:{k:"rain",c:"Light showers around Ratlam",i:1,t:"Wet rails may cause small speed restrictions, adding a few minutes."}},
+{n:"12009",m:"Shatabdi Express",st:["Mumbai Central","Borivali","Surat","Vadodara Jn","Anand Jn","Ahmedabad Jn"],p:2,f:.7,sp:104,d:3,e:28,w:{k:"cloud",c:"Partly cloudy along the route",i:0,t:"Conditions are normal. No impact expected."}},
+{n:"12925",m:"Paschim Express",st:["Mumbai Central","Surat","Vadodara Jn","Ratlam Jn","Kota Jn","Mathura Jn","New Delhi","Ambala Cantt","Ludhiana Jn","Amritsar Jn"],p:4,f:.3,sp:72,d:31,e:205,w:{k:"fog",c:"Dense fog expected near Mathura",i:2,t:"Low visibility will force slower running through the section, adding significant delay."}},
+{n:"12301",m:"Howrah Rajdhani",st:["Howrah Jn","Dhanbad Jn","Gaya Jn","Pt DD Upadhyaya Jn","Prayagraj Jn","Kanpur Central","New Delhi"],p:2,f:.5,sp:110,d:9,e:62,w:{k:"cloud",c:"Overcast with light showers possible",i:1,t:"Minor effect possible if showers set in near Pt DD Upadhyaya Jn."}},
+{n:"12627",m:"Karnataka Express",st:["KSR Bengaluru","Guntakal Jn","Raichur","Secunderabad Jn","Nagpur","Bhopal Jn","Jhansi Jn","Agra Cantt","New Delhi"],p:3,f:.4,sp:78,d:18,e:190,w:{k:"rain",c:"Thunderstorms possible near Nagpur",i:1,t:"Storm cells ahead may trigger precautionary speed limits."}}
+];
+var IC={sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',cloud:'<path d="M7 18a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.5A3.4 3.4 0 0 1 17.5 18H7z"/>',rain:'<path d="M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.5A3.5 3.5 0 0 1 17.5 15H7z"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/>',fog:'<path d="M3 8h18M5 12h14M3 16h18M7 20h10"/>'};
+var cur=null,sp=0;
+function fmt(min){return new Date(Date.now()+min*60000).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",hour12:false})}
+$("lst").innerHTML=T.map(function(t){return'<button class="it" data-n="'+t.n+'"><b>'+t.n+' – <span>'+t.m+'</span></b><div class="sub"><em><i class="d r"></i>Passed '+t.st[t.p]+'</em><em><i class="d g"></i>Next '+t.st[t.p+1]+"</em></div></button>"}).join("");
+function show(t){cur=t;sp=t.sp;var r=Math.min(100,t.d*2+t.w.i*12),dv=r<34?0:r<67?1:2;
+var tk=t.st.map(function(s,i){var c=i<=t.p?"r":i==t.p+1?"g":"w";return'<div class="s '+c+(i==t.p?" c":"")+'"'+(i==t.p?' style="--f:'+t.f+'"':"")+'><span class="nm">'+s+"</span><i></i>"+(c=="g"?"<em>ETA "+fmt(t.e)+"</em>":"")+"</div>"}).join("");
+$("res").innerHTML='<button class="back" id="bk">← Top searched trains</button><div class="main"><div><div class="tn">'+t.n+'</div><div class="tm">'+t.m+'</div><div class="rt">'+t.st[0]+" → "+t.st[t.st.length-1]+'</div><a class="al" href="#alerts">Get SMS alerts for this journey</a></div><div class="trk" id="trk">'+tk+'</div></div>'+
+'<div class="mt"><div class="m"><div class="lb">Train speed</div><div class="v"><span id="spd">'+sp+'</span> <small>km/h</small></div><div class="vd">Last pole reading</div></div>'+
+'<div class="m"><div class="lb">AI delay expected</div><div class="v">+'+t.d+' <small>min</small></div><div class="sc"><u style="left:'+r+'%"></u></div><div class="sl"><span>Less delay</span><span>May or may not</span><span>Too much</span></div><div class="vd" style="margin-top:12px">'+["Likely to run on time","May or may not be delayed","Heavy delay likely"][dv]+'</div></div>'+
+'<div class="m"><div class="lb">AI weather prediction</div><div class="wr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+IC[t.w.k]+'</svg><div><div class="wc">'+t.w.c+'</div><span class="chp c'+t.w.i+'">'+["No effect expected","Minor effect possible","Will affect the train"][t.w.i]+'</span><div class="wt">'+t.w.t+"</div></div></div></div></div>";
+$("tp").hidden=true;$("res").hidden=false;$("msg").textContent="";
+var k=$("trk");k.scrollLeft=(t.p+1)*116-k.clientWidth/2+58;
+$("bk").onclick=function(){cur=null;$("res").hidden=true;$("tp").hidden=false;$("q").value="";$("q").focus()};
+$("find").scrollIntoView({behavior:"smooth",block:"start"})}
+$("lst").onclick=function(e){var b=e.target.closest("button");if(b)show(T.filter(function(t){return t.n==b.dataset.n})[0])};
+$("f").onsubmit=function(e){e.preventDefault();var v=$("q").value.trim().toLowerCase();if(!v)return;
+var t=T.filter(function(x){return x.n==v||x.m.toLowerCase().indexOf(v)>-1})[0];
+if(t)show(t);else{$("msg").textContent="We couldn’t find “"+$("q").value.trim()+"”. Try a train number such as 12951, or pick one below.";$("res").hidden=true;$("tp").hidden=false}};
+var SMS_ENDPOINT="";/* set to your FastAPI route (POST JSON) when self-hosting */
+function R(t){return Math.min(100,t.d*2+t.w.i*12)}
+function at(t,i){return t.e+(i-t.p-1)*Math.round(13200/t.sp)}
+function tn(n){return T.filter(function(t){return t.n==n})[0]}
+var SN=[];T.forEach(function(t){t.st.forEach(function(s){if(SN.indexOf(s)<0)SN.push(s)})});SN.sort();
+$("bs").innerHTML=SN.map(function(s){return"<option"+(s=="Vadodara Jn"?" selected":"")+">"+s+"</option>"}).join("");
+function board(){var s=$("bs").value,rows=[];T.forEach(function(t){var i=t.st.indexOf(s);if(i>t.p)rows.push({t:t,m:at(t,i)})});rows.sort(function(a,b){return a.m-b.m});
+$("bl").innerHTML=rows.length?rows.map(function(x){var r=R(x.t),c=r<34?0:r<67?1:2;return'<div class="br"><div><b>'+x.t.n+' – '+x.t.m+'</b><span>to '+x.t.st[x.t.st.length-1]+' · in '+Math.round(x.m)+' min</span></div><div class="bt">'+fmt(x.m)+'</div><span class="chp c'+c+'">+'+x.t.d+' min</span></div>'}).join(""):'<div class="br">No trains due at this station right now.</div>'}
+$("bs").onchange=board;board();
+$("ca").innerHTML=$("cb").innerHTML=T.map(function(t){return'<option value="'+t.n+'">'+t.n+" – "+t.m+"</option>"}).join("");$("cb").selectedIndex=1;
+function conn(keep){var A=tn($("ca").value),B=tn($("cb").value),sh=[],o=$("co");
+A.st.forEach(function(s,i){var j=B.st.indexOf(s);if(A!=B&&i>A.p&&j>B.p)sh.push(s)});
+if(keep!==1)$("cs").innerHTML=sh.map(function(s){return"<option>"+s+"</option>"}).join("");
+if(!sh.length){o.textContent=A==B?"Choose two different trains.":"These two trains don’t share a station that is still ahead of both.";return}
+var s=$("cs").value,a=at(A,A.st.indexOf(s)),b=at(B,B.st.indexOf(s))+5,g=b-a,sg=(5+R(A)*.12)/2,pr=Math.round(100/(1+Math.exp(-(g-8)/sg))),v=pr>=75?"Very likely":pr>=40?"May or may not make it":"Unlikely";
+o.innerHTML='<div class="lb">Likelihood of making the connection</div><div class="pc">'+pr+'%</div><div class="vd">'+v+'</div><div class="sc rv"><u style="left:'+pr+'%"></u></div><div class="sl"><span>Unlikely</span><span>May or may not</span><span>Very likely</span></div><div class="wt" style="margin-top:12px">'+A.n+' reaches '+s+' around '+fmt(a)+' (+'+A.d+' min). '+B.n+' departs around '+fmt(b)+'. Gap: '+Math.round(g)+' min.</div>'}
+$("ca").onchange=$("cb").onchange=function(){conn()};$("cs").onchange=function(){conn(1)};conn();
+var tkt={};
+function approve(o){o.pnr=String(o.pnr||"").replace(/\D/g,"");o.train_no=String(o.train_no||"").replace(/\D/g,"");var t=tn(o.train_no);
+if(t){o.train_name=o.train_name||t.m;o.from=o.from||t.st[0];o.to=o.to||t.st[t.st.length-1]}tkt=o;
+var p=o.pnr.length==10,dt=o.date?new Date(o.date+"T23:59:59"):null,fu=!dt||isNaN(dt)||dt>=new Date(),good=p&&fu;
+var row=function(k,v){return'<div class="br" style="grid-template-columns:1fr auto"><span>'+k+'</span><b>'+(v||"—")+"</b></div>"};
+$("ck").innerHTML=row("PNR",o.pnr)+row("Train",(o.train_no+" "+(o.train_name||"")).trim())+row("Journey date",o.date)+row("Route",o.from?o.from+" → "+o.to:"")+'<div style="margin-top:12px"><span class="chp c'+(good?0:2)+'">'+(good?"Ticket approved":"Ticket not approved")+'</span> <span class="chp c'+(t?0:1)+'">'+(t?"Live on RailEdge":"Limited coverage")+'</span></div><div class="wt">'+(good?"PNR format checked and journey date confirmed. Add your mobile number below and alerts will start when your journey begins.":!p?"We couldn’t find a valid 10-digit PNR. Try a clearer image or enter it manually.":"This journey date has already passed.")+"</div>";
+$("ck").hidden=false;$("nm").hidden=!good;if(good)$("ap").focus()}
+$("fs").onclick=async function(){var f=$("fi").files[0],m=$("sm2");if(!f){m.textContent="Choose a ticket image first.";return}
+m.style.color="#9a9da2";m.textContent="Reading your ticket…";
+try{var s=window.claude?await claude.use("sample"):null;if(!s){m.style.color="#ff8a80";m.textContent="Ticket scanning isn’t available here. Enter the details manually instead.";$("mn").open=true;return}
+var r=await s('Read this Indian Railways ticket image. Reply with ONLY a JSON object with keys pnr (10 digits), train_no, train_name, date (journey date as YYYY-MM-DD), from, to. Use empty strings for anything not visible. Never include passenger names.',{images:[f],cache:false});
+var x=r.text;approve(JSON.parse(x.slice(x.indexOf("{"),x.lastIndexOf("}")+1)));m.textContent=""}
+catch(e){m.style.color="#ff8a80";m.textContent="We couldn’t read that ticket. Try a clearer image or enter the details manually.";$("mn").open=true}};
+$("mb").onclick=function(){approve({pnr:$("mp").value,train_no:$("mt").value,date:$("md").value})};
+$("ab").onclick=function(){var d=$("ap").value.replace(/\D/g,""),n=d.length==10&&/^[6-9]/.test(d)?"+91"+d:d.length==12&&d.slice(0,2)=="91"?"+"+d:null,s=$("as");
+if(!n){s.style.color="#ff8a80";s.textContent="Enter a valid 10-digit Indian mobile number.";return}
+if(!$("ac").checked){s.style.color="#ff8a80";s.textContent="Please tick the consent box to continue.";return}
+var done=function(){s.style.color="#4ade80";s.textContent="You’re set. SMS alerts for train "+tkt.train_no+" will start when your journey begins"+(tkt.date?" on "+tkt.date:"")+"."+(SMS_ENDPOINT?"":" (Demo: the SMS service is not connected yet.)")};
+if(!SMS_ENDPOINT){done();return}
+s.style.color="#9a9da2";s.textContent="Saving…";
+fetch(SMS_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to:n,pnr:tkt.pnr,train_no:tkt.train_no,date:tkt.date,from:tkt.from,dest:tkt.to})}).then(function(r){if(r.ok)done();else{s.style.color="#ff8a80";s.textContent="Could not save your alert ("+r.status+"). Please try again."}}).catch(function(){s.style.color="#ff8a80";s.textContent="Could not reach the alert service. Please try again."})};
+function tab(t){["faq","contact","privacy","terms"].forEach(function(x){$("i-"+x).hidden=x!=t});document.querySelectorAll("#tb button").forEach(function(b){b.classList.toggle("on",b.dataset.t==t)})}
+document.querySelectorAll("[data-t]").forEach(function(el){el.addEventListener("click",function(e){tab(this.dataset.t);if(this.tagName=="A"){e.preventDefault();$("info").scrollIntoView({behavior:"smooth"})}})});
+setInterval(function(){if(!cur)return;sp=Math.max(40,Math.min(130,sp+Math.round(Math.random()*4-2)));var s=$("spd");if(s)s.textContent=sp},2500);
+</script>
+</body>
+</html>
